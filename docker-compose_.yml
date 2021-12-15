@@ -1,19 +1,15 @@
-version: "3.8"
+version: '3.8'
 
 services:
   api:
     build: ./backend
-    # user: ${USER_ID:-1000}:${GROUP_ID:-1000}
     ports:
       - 3001:3001
-    environment:
-      DB_URL: mongodb://db/vidly
     volumes:
       - ./backend:/app
-    command: ./docker-entrypoint.sh
-    depends_on:
-      - db
-
+    environment:
+      DB_URL: "mongodb://db/vidly"
+  
   web:
     build: ./frontend
     # user: ${USER_ID:-1000}:${GROUP_ID:-1000}
@@ -23,20 +19,13 @@ services:
       - ./frontend:/app
     depends_on:
       - api
-
+  
   db:
     image: mongo:4.0-xenial
     ports:
       - 27018:27017
     volumes:
       - vidly:/data/db
-    
-  npm:
-    image: node:16.5.0-alpine3.14
-    working_dir: /app/
-    volumes:
-      - ./frontend:/app
-    entrypoint: ["npm"]
 
 volumes:
   vidly:
